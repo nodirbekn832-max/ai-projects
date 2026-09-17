@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Globus Apteka — mobil ilova dizayni</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F6F2E9;
+    --panel-ink:#16261F;
+    --panel-muted:#5B6B60;
+    --surface:#FFFFFF;
+    --ink:#14251F;
+    --muted:#7C8A82;
+    --primary:#1F7A4D;
+    --primary-dark:#134429;
+    --primary-tint:#E4F0E7;
+    --accent:#E1673E;
+    --accent-tint:#FCE7DD;
+    --border:#E7E1D2;
+    --chrome:#0F1B16;
+    --shadow: 0 30px 60px -20px rgba(15,27,22,.35);
+  }
+  :root:not([data-theme="light"]){
+    @media (prefers-color-scheme: dark){
+      --bg:#0E1712;
+      --panel-ink:#F2EFE6;
+      --panel-muted:#9CAA9F;
+      --border:#243329;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#0E1712;
+    --panel-ink:#F2EFE6;
+    --panel-muted:#9CAA9F;
+    --border:#243329;
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--panel-ink);
+    font-family:'Inter',ui-sans-serif,system-ui,sans-serif;
+    min-height:100vh;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  .wrap{
+    max-width:1180px;
+    margin:0 auto;
+    padding:64px 32px 80px;
+    display:grid;
+    grid-template-columns:minmax(300px,440px) auto;
+    gap:64px;
+    align-items:start;
+  }
+
+  /* ---------- LEFT PANEL ---------- */
+  .brandmark{
+    display:flex;align-items:center;gap:12px;margin-bottom:36px;
+  }
+  .brandmark .mark{
+    width:44px;height:44px;border-radius:13px;
+    background:linear-gradient(155deg,var(--primary),var(--primary-dark));
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:0 8px 18px -6px rgba(31,122,77,.55);
+  }
+  .brandmark .mark svg{width:24px;height:24px;stroke:#fff;}
+  .brandmark .name{
+    font-family:'Fraunces',serif;font-weight:600;font-size:22px;letter-spacing:-.01em;
+    color:var(--panel-ink);
+  }
+  .brandmark .name span{color:var(--primary);font-style:italic;}
+
+  h1.tagline{
+    font-family:'Fraunces',serif;
+    font-weight:500;
+    font-size:clamp(30px,3.6vw,42px);
+    line-height:1.12;
+    letter-spacing:-.01em;
+    margin:0 0 18px;
+    color:var(--panel-ink);
+  }
+  h1.tagline em{font-style:italic;color:var(--primary);}
+
+  .lede{
+    font-size:16px;line-height:1.65;color:var(--panel-muted);
+    max-width:40ch;margin:0 0 34px;
+  }
+
+  .feature-list{
+    display:flex;flex-direction:column;gap:16px;margin:0 0 40px;
+    padding:22px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);
+  }
+  .feature{display:flex;align-items:flex-start;gap:13px;}
+  .feature .fi{
+    flex:none;width:34px;height:34px;border-radius:10px;background:var(--primary-tint);
+    display:flex;align-items:center;justify-content:center;
+  }
+  .feature .fi svg{width:17px;height:17px;stroke:var(--primary);}
+  .feature .ft{font-size:14.5px;line-height:1.4;color:var(--panel-ink);}
+  .feature .ft b{display:block;font-weight:600;font-size:15px;margin-bottom:1px;}
+  .feature .ft small{color:var(--panel-muted);font-weight:400;}
+
+  .screen-picker{display:flex;flex-direction:column;gap:8px;}
+  .screen-picker .sp-label{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--panel-muted);margin-bottom:6px;font-weight:600;}
+  .sp-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
+  .sp-btn{
+    display:flex;flex-direction:column;align-items:center;gap:6px;
+    padding:12px 4px 10px;border-radius:14px;border:1px solid var(--border);
+    background:var(--surface,#fff);cursor:pointer;transition:all .18s ease;
+    font-family:inherit;color:var(--muted);
+  }
+  .sp-btn svg{width:19px;height:19px;stroke:var(--muted);transition:stroke .18s ease;}
+  .sp-btn span{font-size:11.5px;font-weight:600;}
+  .sp-btn.active{background:var(--primary);border-color:var(--primary);color:#fff;}
+  .sp-btn.active svg{stroke:#fff;}
+
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]) .sp-btn{background:#152019;}
+  }
+  :root[data-theme="dark"] .sp-btn{background:#152019;}
+
+  /* ---------- PHONE ---------- */
+  .phone-stage{display:flex;justify-content:center;}
+  .device{
+    width:376px;height:790px;border-radius:52px;background:var(--chrome);
+    padding:14px;box-shadow:var(--shadow);position:relative;flex:none;
+  }
+  .device::before{
+    content:"";position:absolute;top:0;left:50%;transform:translateX(-50%);
+    width:120px;height:26px;background:var(--chrome);border-radius:0 0 18px 18px;z-index:5;
+  }
+  .screen{
+    width:100%;height:100%;background:var(--surface);border-radius:38px;
+    overflow:hidden;position:relative;display:flex;flex-direction:column;
+    font-size:14px;color:var(--ink);
+  }
+
+  .statusbar{
+    display:flex;justify-content:space-between;align-items:center;
+    padding:16px 26px 4px;font-size:14px;font-weight:600;color:var(--ink);flex:none;
+  }
+  .statusbar .icons{display:flex;gap:5px;align-items:center;}
+  .statusbar svg{width:16px;height:16px;stroke:var(--ink);}
+
+  .app-body{flex:1;overflow-y:auto;padding:14px 20px 10px;}
+  .app-body::-webkit-scrollbar{display:none;}
+
+  .app-body{scrollbar-width:none;}
+
+  .screen-panel{display:none;}
+  .screen-panel.active{display:block;animation:fade .25s ease;}
+  @keyframes fade{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+
+  /* shared bits */
+  .sec-head{display:flex;align-items:baseline;justify-content:space-between;margin:22px 0 12px;}
+  .sec-head h3{font-family:'Fraunces',serif;font-weight:600;font-size:17px;margin:0;color:var(--ink);}
+  .sec-head a{font-size:12.5px;color:var(--primary);font-weight:600;text-decoration:none;}
+
+  .icon-circle{
+    flex:none;display:flex;align-items:center;justify-content:center;border-radius:50%;
+  }
+  .icon-circle svg{stroke-width:1.7;}
+
+  /* HOME */
+  .home-top{display:flex;justify-content:space-between;align-items:flex-start;margin-top:4px;}
+  .greet h2{font-family:'Fraunces',serif;font-weight:600;font-size:20px;margin:0 0 3px;color:var(--ink);}
+  .greet p{margin:0;font-size:12.5px;color:var(--muted);}
+  .bell-btn{position:relative;width:38px;height:38px;border-radius:12px;background:var(--primary-tint);display:flex;align-items:center;justify-content:center;flex:none;}
+  .bell-btn svg{width:18px;height:18px;stroke:var(--primary);}
+  .bell-btn .dot{position:absolute;top:8px;right:9px;width:7px;height:7px;border-radius:50%;background:var(--accent);border:1.5px solid var(--surface);}
+
+  .search-bar{
+    margin-top:16px;display:flex;align-items:center;gap:9px;
+    background:#F4F1E8;border-radius:14px;padding:12px 14px;border:1px solid var(--border);
+  }
+  .search-bar svg{width:17px;height:17px;stroke:var(--muted);flex:none;}
+  .search-bar span{color:var(--muted);font-size:13px;}
+
+  .promo{
+    margin-top:16px;border-radius:20px;padding:20px;position:relative;overflow:hidden;
+    background:linear-gradient(135deg,var(--primary) 0%,var(--primary-dark) 100%);color:#fff;
+  }
+  .promo .leaf{position:absolute;right:-18px;top:-18px;width:110px;height:110px;opacity:.18;}
+  .promo .leaf svg{width:100%;height:100%;stroke:#fff;}
+  .promo b{display:block;font-family:'Fraunces',serif;font-weight:600;font-size:19px;margin-bottom:4px;position:relative;}
+  .promo p{margin:0 0 14px;font-size:12.5px;opacity:.9;max-width:70%;position:relative;}
+  .promo .code{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.16);border:1px dashed rgba(255,255,255,.55);border-radius:10px;padding:7px 12px;font-size:12px;font-weight:700;letter-spacing:.03em;position:relative;}
+
+  .chips{display:flex;gap:16px;overflow-x:auto;padding:2px 2px 4px;}
+  .chip{flex:none;display:flex;flex-direction:column;align-items:center;gap:7px;width:64px;}
+  .chip .icon-circle{width:52px;height:52px;background:var(--primary-tint);}
+  .chip .icon-circle svg{width:23px;height:23px;stroke:var(--primary);}
+  .chip span{font-size:11px;font-weight:600;text-align:center;color:var(--ink);line-height:1.2;}
+
+  .prod-row{display:flex;gap:13px;overflow-x:auto;padding:2px 2px 8px;}
+  .prod-card{flex:none;width:138px;border:1px solid var(--border);border-radius:16px;padding:12px;background:var(--surface);}
+  .prod-card .thumb{width:100%;height:76px;border-radius:11px;background:var(--primary-tint);display:flex;align-items:center;justify-content:center;margin-bottom:10px;position:relative;}
+  .prod-card .thumb svg{width:30px;height:30px;stroke:var(--primary);}
+  .prod-card .tag{position:absolute;top:6px;left:6px;background:var(--accent);color:#fff;font-size:9px;font-weight:700;padding:2px 6px;border-radius:6px;}
+  .prod-card .pname{font-size:12.5px;font-weight:600;margin:0 0 2px;color:var(--ink);line-height:1.25;}
+  .prod-card .pdesc{font-size:10.5px;color:var(--muted);margin:0 0 7px;}
+  .prod-card .rating{display:flex;align-items:center;gap:3px;font-size:10.5px;color:var(--muted);margin-bottom:8px;}
+  .prod-card .rating svg{width:11px;height:11px;stroke:#E8A93B;fill:#E8A93B;}
+  .prod-card .pfoot{display:flex;align-items:center;justify-content:space-between;}
+  .prod-card .price{font-size:13px;font-weight:700;color:var(--ink);}
+  .add-btn{width:26px;height:26px;border-radius:50%;background:var(--primary);display:flex;align-items:center;justify-content:center;border:none;flex:none;cursor:pointer;}
+  .add-btn svg{width:13px;height:13px;stroke:#fff;stroke-width:2.4;}
+
+  .branch-card{display:flex;gap:12px;align-items:flex-start;border:1px solid var(--border);border-radius:16px;padding:14px;margin-top:2px;}
+  .branch-card .icon-circle{width:38px;height:38px;background:var(--accent-tint);}
+  .branch-card .icon-circle svg{width:18px;height:18px;stroke:var(--accent);}
+  .branch-card .bt{flex:1;}
+  .branch-card .bt b{display:block;font-size:12.5px;color:var(--ink);margin-bottom:2px;}
+  .branch-card .bt small{font-size:11px;color:var(--muted);}
+  .branch-card a{font-size:11.5px;color:var(--primary);font-weight:700;text-decoration:none;flex:none;padding-top:2px;}
+
+  /* CATALOG */
+  .page-head{display:flex;align-items:center;justify-content:space-between;padding-top:4px;}
+  .page-head h2{font-family:'Fraunces',serif;font-weight:600;font-size:21px;margin:0;color:var(--ink);}
+  .round-btn{width:36px;height:36px;border-radius:11px;background:#F4F1E8;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;}
+  .round-btn svg{width:16px;height:16px;stroke:var(--ink);}
+
+  .cat-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px;}
+  .cat-card{border:1px solid var(--border);border-radius:16px;padding:14px;display:flex;flex-direction:column;gap:26px;}
+  .cat-card .icon-circle{width:42px;height:42px;}
+  .cat-card .icon-circle svg{width:20px;height:20px;}
+  .cat-card b{font-size:12.5px;color:var(--ink);display:block;}
+  .cat-card small{font-size:10.5px;color:var(--muted);}
+  .c1 .icon-circle{background:#E4F0E7;} .c1 svg{stroke:#1F7A4D;}
+  .c2 .icon-circle{background:#FCE7DD;} .c2 svg{stroke:#E1673E;}
+  .c3 .icon-circle{background:#E6EEFB;} .c3 svg{stroke:#3B6FCC;}
+  .c4 .icon-circle{background:#F6E8F3;} .c4 svg{stroke:#B5539B;}
+  .c5 .icon-circle{background:#EFEADC;} .c5 svg{stroke:#8A7A47;}
+  .c6 .icon-circle{background:#FDEBE0;} .c6 svg{stroke:#D6572E;}
+  .c7 .icon-circle{background:#E1F2EF;} .c7 svg{stroke:#1C8A79;}
+  .c8 .icon-circle{background:#EFEFEF;} .c8 svg{stroke:#5B6B60;}
+
+  /* CART */
+  .cart-item{display:flex;gap:12px;align-items:center;padding:13px 0;border-bottom:1px solid var(--border);}
+  .cart-item .thumb{width:52px;height:52px;border-radius:12px;background:var(--primary-tint);display:flex;align-items:center;justify-content:center;flex:none;}
+  .cart-item .thumb svg{width:24px;height:24px;stroke:var(--primary);}
+  .cart-item .info{flex:1;min-width:0;}
+  .cart-item .info b{display:block;font-size:12.5px;color:var(--ink);margin-bottom:2px;}
+  .cart-item .info small{font-size:11px;color:var(--muted);}
+  .cart-item .side{display:flex;flex-direction:column;align-items:flex-end;gap:8px;}
+  .cart-item .side .price{font-size:12.5px;font-weight:700;color:var(--ink);}
+  .stepper{display:flex;align-items:center;gap:9px;background:#F4F1E8;border-radius:20px;padding:4px 8px;}
+  .stepper button{width:19px;height:19px;border-radius:50%;border:none;background:var(--surface);display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.12);}
+  .stepper button svg{width:9px;height:9px;stroke:var(--ink);stroke-width:2.6;}
+  .stepper span{font-size:11.5px;font-weight:700;min-width:12px;text-align:center;}
+
+  .promo-input{display:flex;gap:8px;margin-top:16px;}
+  .promo-input input{flex:1;border:1px solid var(--border);border-radius:12px;padding:11px 13px;font-size:12.5px;font-family:inherit;background:#F4F1E8;color:var(--ink);}
+  .promo-input input::placeholder{color:var(--muted);}
+  .promo-input button{border:none;background:var(--ink);color:#fff;border-radius:12px;padding:0 16px;font-size:12px;font-weight:700;cursor:pointer;}
+
+  .summary{margin-top:18px;display:flex;flex-direction:column;gap:9px;}
+  .summary .row{display:flex;justify-content:space-between;font-size:12.5px;color:var(--muted);}
+  .summary .row.total{color:var(--ink);font-weight:700;font-size:14.5px;padding-top:10px;border-top:1px solid var(--border);}
+  .cta-btn{width:100%;margin-top:16px;border:none;background:var(--primary);color:#fff;padding:15px;border-radius:14px;font-size:14px;font-weight:700;font-family:inherit;cursor:pointer;}
+
+  /* PROFILE */
+  .profile-head{display:flex;align-items:center;gap:13px;margin-top:6px;}
+  .avatar{width:56px;height:56px;border-radius:50%;background:linear-gradient(155deg,var(--primary),var(--primary-dark));display:flex;align-items:center;justify-content:center;color:#fff;font-family:'Fraunces',serif;font-weight:600;font-size:19px;flex:none;}
+  .profile-head .pinfo{flex:1;}
+  .profile-head .pinfo b{display:block;font-size:15.5px;color:var(--ink);}
+  .profile-head .pinfo small{font-size:11.5px;color:var(--muted);}
+
+  .bonus-card{margin-top:18px;border-radius:18px;padding:18px;background:linear-gradient(135deg,#1B2A22,#0F1B16);color:#fff;position:relative;overflow:hidden;}
+  .bonus-card svg.deco{position:absolute;right:-14px;bottom:-16px;width:96px;height:96px;stroke:#fff;opacity:.08;}
+  .bonus-card .lbl{font-size:10.5px;letter-spacing:.04em;color:#B9C8BE;margin-bottom:6px;}
+  .bonus-card .amt{font-family:'Fraunces',serif;font-weight:600;font-size:23px;margin-bottom:14px;}
+  .bonus-card .num{font-size:12px;letter-spacing:.1em;color:#B9C8BE;}
+
+  .menu-list{margin-top:8px;display:flex;flex-direction:column;}
+  .menu-item{display:flex;align-items:center;gap:12px;padding:13px 2px;border-bottom:1px solid var(--border);}
+  .menu-item .icon-circle{width:36px;height:36px;background:#F4F1E8;}
+  .menu-item .icon-circle svg{width:17px;height:17px;stroke:var(--ink);}
+  .menu-item span{flex:1;font-size:13px;color:var(--ink);font-weight:500;}
+  .menu-item svg.chev{width:15px;height:15px;stroke:var(--muted);}
+  .menu-item.danger .icon-circle{background:var(--accent-tint);}
+  .menu-item.danger .icon-circle svg{stroke:var(--accent);}
+  .menu-item.danger span{color:var(--accent);}
+
+  /* BOTTOM NAV */
+  .tabbar{flex:none;display:flex;justify-content:space-around;align-items:center;padding:9px 8px 14px;border-top:1px solid var(--border);background:var(--surface);}
+  .tab{display:flex;flex-direction:column;align-items:center;gap:4px;background:none;border:none;font-family:inherit;cursor:pointer;color:var(--muted);position:relative;padding:2px 10px;}
+  .tab svg{width:21px;height:21px;stroke:var(--muted);}
+  .tab span{font-size:9.5px;font-weight:600;}
+  .tab.active{color:var(--primary);}
+  .tab.active svg{stroke:var(--primary);}
+  .tab .badge{position:absolute;top:-3px;right:2px;background:var(--accent);color:#fff;font-size:8.5px;font-weight:700;min-width:14px;height:14px;border-radius:7px;display:flex;align-items:center;justify-content:center;padding:0 3px;}
+
+  @media (max-width:920px){
+    .wrap{grid-template-columns:1fr;justify-items:center;text-align:left;padding:40px 20px 60px;}
+    .brandmark,.feature-list,.screen-picker,.lede,h1.tagline{max-width:420px;width:100%;}
+  }
+  @media (max-width:420px){
+    .device{width:100%;max-width:360px;height:760px;}
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <!-- LEFT PANEL -->
+  <div>
+    <div class="brandmark">
+      <div class="mark">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M3 12h18"/></svg>
+      </div>
+      <div class="name">Globus <span>Apteka</span></div>
+    </div>
+
+    <h1 class="tagline">Sog'lig'ingiz endi <em>bir dokunishda</em> yetib boradi</h1>
+    <p class="lede">Globus apteka ilovasi uchun mobil interfeys dizayni: qidiruv, katalog, savat va profil ekranlari — bitta yaxlit uslubda.</p>
+
+    <div class="feature-list">
+      <div class="feature">
+        <div class="fi"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h11M13 7l5 5-5 5"/></svg></div>
+        <div class="ft"><b>Tezkor yetkazib berish</b><small>90 daqiqada eshigingizgacha</small></div>
+      </div>
+      <div class="feature">
+        <div class="fi"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="10" r="3"/><path d="M12 21c-4-4.2-7-7.6-7-11a7 7 0 0 1 14 0c0 3.4-3 6.8-7 11Z"/></svg></div>
+        <div class="ft"><b>500+ filial</b><small>butun O'zbekiston bo'ylab</small></div>
+      </div>
+      <div class="feature">
+        <div class="fi"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 6.5v5c0 4.6 3.2 8.4 8 9.5 4.8-1.1 8-4.9 8-9.5v-5L12 3Z"/><path d="m9 12 2 2 4-4"/></svg></div>
+        <div class="ft"><b>Original dorilar</b><small>faqat rasmiy yetkazib beruvchilardan</small></div>
+      </div>
+    </div>
+
+    <div class="screen-picker">
+      <div class="sp-label">Ekranni tanlang</div>
+      <div class="sp-row" id="picker"></div>
+    </div>
+  </div>
+
+  <!-- PHONE -->
+  <div class="phone-stage">
+    <div class="device">
+      <div class="screen">
+        <div class="statusbar">
+          <span>9:41</span>
+          <div class="icons">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M2 8c5.5-5 14.5-5 20 0M6 12c3-2.6 9-2.6 12 0M9.5 16c1.6-1.3 3.4-1.3 5 0"/><circle cx="12" cy="19" r="1" fill="currentColor" stroke="none"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="2" y="9" width="19" height="10" rx="2.5"/><path d="M22 12.5v3" stroke-linecap="round"/><rect x="4" y="11" width="13" height="6" rx="1" fill="currentColor" stroke="none"/></svg>
+          </div>
+        </div>
+
+        <div class="app-body">
+
+          <!-- HOME -->
+          <div class="screen-panel active" data-panel="home">
+            <div class="home-top">
+              <div class="greet">
+                <h2>Salom, Diyora</h2>
+                <p>Bugun o'zingizni qanday his qilyapsiz?</p>
+              </div>
+              <div class="bell-btn"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9a6 6 0 1 1 12 0c0 4 1.5 5.5 1.5 5.5h-15S6 13 6 9Z"/><path d="M10 18a2 2 0 0 0 4 0"/></svg><div class="dot"></div></div>
+            </div>
+
+            <div class="search-bar">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+              <span>Dori yoki mahsulot qidirish</span>
+            </div>
+
+            <div class="promo">
+              <div class="leaf"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.2"><path d="M12 21c0-9 4-14 9-15-1 9-4 13-9 15Z"/><path d="M12 21c0-9-4-14-9-15 1 9 4 13 9 15Z"/></svg></div>
+              <b>Onlayn buyurtmaga −15%</b>
+              <p>Ilova orqali birinchi xaridingizga chegirma</p>
+              <span class="code">GLOBUS15 <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h11M13 7l5 5-5 5"/></svg></span>
+            </div>
+
+            <div class="sec-head"><h3>Tezkor toifalar</h3></div>
+            <div class="chips">
+              <div class="chip"><div class="icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="9" width="18" height="6" rx="3" transform="rotate(-45 12 12)"/><path d="m9.5 14.5 5-5" stroke-width="0"/><line x1="9.7" y1="14.3" x2="14.3" y2="9.7"/></svg></div><span>Dorilar</span></div>
+              <div class="chip"><div class="icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v6M8 5l4 3 4-3"/><circle cx="12" cy="14" r="7"/><path d="M12 10.5v7M8.5 14h7"/></svg></div><span>Vitaminlar</span></div>
+              <div class="chip"><div class="icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6l1 4H8l1-4Z"/><path d="M7 7h10l1 13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1L7 7Z"/><path d="M9 12c1 1 5 1 6 0"/></svg></div><span>Ona &amp; bola</span></div>
+              <div class="chip"><div class="icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c2 2 3 4 3 6a3 3 0 1 1-6 0c0-2 1-4 3-6Z"/><path d="M6 21c0-3 2.7-5 6-5s6 2 6 5"/></svg></div><span>Kosmetika</span></div>
+              <div class="chip"><div class="icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="12" rx="2"/><path d="M9 20h6M12 16v4"/></svg></div><span>Texnika</span></div>
+            </div>
+
+            <div class="sec-head"><h3>Ko'p sotiladigan</h3><a href="#">Barchasi</a></div>
+            <div class="prod-row">
+              <div class="prod-card">
+                <div class="thumb"><span class="tag">-10%</span><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="9" width="18" height="6" rx="3" transform="rotate(-45 12 12)"/><line x1="9.7" y1="14.3" x2="14.3" y2="9.7"/></svg></div>
+                <p class="pname">Parasetamol 500mg</p>
+                <p class="pdesc">20 tabletka</p>
+                <div class="rating"><svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.6L22 9l-5 4.9 1.2 7.1L12 17.8 5.8 21l1.2-7.1L2 9l7.1-.4L12 2Z"/></svg> 4.8</div>
+                <div class="pfoot"><span class="price">18 000 so'm</span><button class="add-btn"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button></div>
+              </div>
+              <div class="prod-card">
+                <div class="thumb"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v6M8 6l4 3 4-3"/><circle cx="12" cy="15" r="6"/></svg></div>
+                <p class="pname">Vitamin C 1000mg</p>
+                <p class="pdesc">30 kapsula</p>
+                <div class="rating"><svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.6L22 9l-5 4.9 1.2 7.1L12 17.8 5.8 21l1.2-7.1L2 9l7.1-.4L12 2Z"/></svg> 4.9</div>
+                <div class="pfoot"><span class="price">42 500 so'm</span><button class="add-btn"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button></div>
+              </div>
+              <div class="prod-card">
+                <div class="thumb"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6l1 4H8l1-4Z"/><path d="M7 7h10l1 13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1L7 7Z"/></svg></div>
+                <p class="pname">Bolalar sirobi</p>
+                <p class="pdesc">100 ml</p>
+                <div class="rating"><svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.6L22 9l-5 4.9 1.2 7.1L12 17.8 5.8 21l1.2-7.1L2 9l7.1-.4L12 2Z"/></svg> 4.7</div>
+                <div class="pfoot"><span class="price">36 900 so'm</span><button class="add-btn"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button></div>
+              </div>
+            </div>
+
+            <div class="sec-head"><h3>Yaqin filial</h3></div>
+            <div class="branch-card">
+              <div class="icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="10" r="3"/><path d="M12 21c-4-4.2-7-7.6-7-11a7 7 0 0 1 14 0c0 3.4-3 6.8-7 11Z"/></svg></div>
+              <div class="bt"><b>Globus — Chilonzor filiali</b><small>Bunyodkor ko'chasi, 12 · 650 m</small></div>
+              <a href="#">Xarita</a>
+            </div>
+          </div>
+
+          <!-- CATALOG -->
+          <div class="screen-panel" data-panel="catalog">
+            <div class="page-head">
+              <h2>Katalog</h2>
+              <div class="round-btn"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg></div>
+            </div>
+            <div class="search-bar" style="margin-top:14px;">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+              <span>Toifa yoki brend qidirish</span>
+            </div>
+
+            <div class="cat-grid">
+              <div class="cat-card c1"><div class="icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="9" width="18" height="6" rx="3" transform="rotate(-45 12 12)"/><line x1="9.7" y1="14.3" x2="14.3" y2="9.7"/></svg></div><div><b>Dorilar</b><small>320 mahsulot</small></div></div>
+              <div class="cat-card c2"><div class="icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v6M8 5l4 3 4-3"/><circle cx="12" cy="14" r="7"/></svg></div><div><b>Vitaminlar</b><small>146 mahsulot</small></div></div>
+              <div class="cat-card c3"><div class="icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6l1 4H8l1-4Z"/><path d="M7 7h10l1 13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1L7 7Z"/></svg></div><div><b>Ona va bola</b><small>98 mahsulot</small></div></div>
+              <div class="cat-card c4"><div class="icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c2 2 3 4 3 6a3 3 0 1 1-6 0c0-2 1-4 3-6Z"/><path d="M6 21c0-3 2.7-5 6-5s6 2 6 5"/></svg></div><div><b>Kosmetika</b><small>212 mahsulot</small></div></div>
+              <div class="cat-card c5"><div class="icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="12" rx="2"/><path d="M9 20h6M12 16v4"/></svg></div><div><b>Tibbiy texnika</b><small>54 mahsulot</small></div></div>
+              <div class="cat-card c6"><div class="icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 6.5v5c0 4.6 3.2 8.4 8 9.5 4.8-1.1 8-4.9 8-9.5v-5L12 3Z"/><path d="m9 12 2 2 4-4"/></svg></div><div><b>Birinchi yordam</b><small>41 mahsulot</small></div></div>
+              <div class="cat-card c7"><div class="icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 13a8 8 0 0 1 16 0"/><path d="M4 13h16v2a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-2Z"/><path d="M9 13V9a3 3 0 0 1 6 0v4"/></svg></div><div><b>Ovqat qo'shimchalari</b><small>77 mahsulot</small></div></div>
+              <div class="cat-card c8"><div class="icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 2"/></svg></div><div><b>Boshqalar</b><small>63 mahsulot</small></div></div>
+            </div>
+          </div>
+
+          <!-- CART -->
+          <div class="screen-panel" data-panel="cart">
+            <div class="page-head">
+              <h2>Savat</h2>
+              <span style="font-size:12px;color:var(--muted);font-weight:600;">3 ta mahsulot</span>
+            </div>
+
+            <div class="cart-item">
+              <div class="thumb"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="9" width="18" height="6" rx="3" transform="rotate(-45 12 12)"/><line x1="9.7" y1="14.3" x2="14.3" y2="9.7"/></svg></div>
+              <div class="info"><b>Parasetamol 500mg</b><small>20 tabletka</small></div>
+              <div class="side"><span class="price">36 000 so'm</span>
+                <div class="stepper"><button><svg viewBox="0 0 24 24"><path d="M5 12h14"/></svg></button><span>2</span><button><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button></div>
+              </div>
+            </div>
+            <div class="cart-item">
+              <div class="thumb"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v6M8 5l4 3 4-3"/><circle cx="12" cy="14" r="7"/></svg></div>
+              <div class="info"><b>Vitamin C 1000mg</b><small>30 kapsula</small></div>
+              <div class="side"><span class="price">42 500 so'm</span>
+                <div class="stepper"><button><svg viewBox="0 0 24 24"><path d="M5 12h14"/></svg></button><span>1</span><button><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button></div>
+              </div>
+            </div>
+            <div class="cart-item" style="border-bottom:none;">
+              <div class="thumb"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6l1 4H8l1-4Z"/><path d="M7 7h10l1 13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1L7 7Z"/></svg></div>
+              <div class="info"><b>Bolalar sirobi</b><small>100 ml</small></div>
+              <div class="side"><span class="price">36 900 so'm</span>
+                <div class="stepper"><button><svg viewBox="0 0 24 24"><path d="M5 12h14"/></svg></button><span>1</span><button><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button></div>
+              </div>
+            </div>
+
+            <div class="promo-input">
+              <input type="text" placeholder="Promo-kod">
+              <button>Qo'llash</button>
+            </div>
+
+            <div class="summary">
+              <div class="row"><span>Mahsulotlar summasi</span><span>115 400 so'm</span></div>
+              <div class="row"><span>Yetkazib berish</span><span>15 000 so'm</span></div>
+              <div class="row"><span>Chegirma</span><span>−12 000 so'm</span></div>
+              <div class="row total"><span>Jami</span><span>118 400 so'm</span></div>
+            </div>
+            <button class="cta-btn">Buyurtma berish</button>
+          </div>
+
+          <!-- PROFILE -->
+          <div class="screen-panel" data-panel="profile">
+            <div class="page-head"><h2>Profil</h2></div>
+            <div class="profile-head">
+              <div class="avatar">DK</div>
+              <div class="pinfo"><b>Diyora Karimova</b><small>+998 90 123 45 67</small></div>
+              <div class="round-btn"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5Z"/></svg></div>
+            </div>
+
+            <div class="bonus-card">
+              <svg class="deco" viewBox="0 0 24 24" fill="none" stroke-width="1.2"><circle cx="12" cy="12" r="10"/><path d="M8 12h8M12 8v8"/></svg>
+              <div class="lbl">BONUS BALANS</div>
+              <div class="amt">45 200 so'm</div>
+              <div class="num">•••• •••• •••• 4821</div>
+            </div>
+
+            <div class="menu-list">
+              <div class="menu-item">
+                <div class="icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8 2v4M16 2v4M4 10h16"/></svg></div>
+                <span>Buyurtmalar tarixi</span>
+                <svg class="chev" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="m9 6 6 6-6 6"/></svg>
+              </div>
+              <div class="menu-item">
+                <div class="icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="10" r="3"/><path d="M12 21c-4-4.2-7-7.6-7-11a7 7 0 0 1 14 0c0 3.4-3 6.8-7 11Z"/></svg></div>
+                <span>Yetkazib berish manzillari</span>
+                <svg class="chev" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="m9 6 6 6-6 6"/></svg>
+              </div>
+              <div class="menu-item">
+                <div class="icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 8.6c0 5-8.8 10.4-8.8 10.4S3.2 13.6 3.2 8.6a4.6 4.6 0 0 1 8.8-1.8 4.6 4.6 0 0 1 8.8 1.8Z"/></svg></div>
+                <span>Sevimlilar</span>
+                <svg class="chev" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="m9 6 6 6-6 6"/></svg>
+              </div>
+              <div class="menu-item">
+                <div class="icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 0 0-.1-1.2l2-1.6-2-3.4-2.4 1a7 7 0 0 0-2-1.2L14 3h-4l-.5 2.6a7 7 0 0 0-2 1.2l-2.4-1-2 3.4 2 1.6A7 7 0 0 0 5 12c0 .4 0 .8.1 1.2l-2 1.6 2 3.4 2.4-1c.6.5 1.3.9 2 1.2L10 21h4l.5-2.6c.7-.3 1.4-.7 2-1.2l2.4 1 2-3.4-2-1.6c.1-.4.1-.8.1-1.2Z"/></svg></div>
+                <span>Sozlamalar</span>
+                <svg class="chev" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="m9 6 6 6-6 6"/></svg>
+              </div>
+              <div class="menu-item">
+                <div class="icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.8.4-1 .9-1 1.7"/><circle cx="12" cy="16.5" r=".3" fill="currentColor"/></svg></div>
+                <span>Yordam va aloqa</span>
+                <svg class="chev" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="m9 6 6 6-6 6"/></svg>
+              </div>
+              <div class="menu-item danger">
+                <div class="icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h3"/><path d="M16 17l5-5-5-5M21 12H9"/></svg></div>
+                <span>Chiqish</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="tabbar" id="tabbar"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const SCREENS = [
+    {id:'home', label:'Bosh sahifa', icon:'<path d="M4 11.5 12 4l8 7.5"/><path d="M6 10v9a1 1 0 0 0 1 1h3v-5h4v5h3a1 1 0 0 0 1-1v-9"/>'},
+    {id:'catalog', label:'Katalog', icon:'<rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/>'},
+    {id:'cart', label:'Savat', icon:'<path d="M4 7h2l1.7 9.2A2 2 0 0 0 9.7 18h7.6a2 2 0 0 0 2-1.6L21 9H6.2"/><circle cx="10" cy="21" r="1"/><circle cx="18" cy="21" r="1"/>', badge:3},
+    {id:'profile', label:'Profil', icon:'<circle cx="12" cy="8" r="3.5"/><path d="M5 20c1.2-3.6 4-5.5 7-5.5s5.8 1.9 7 5.5"/>'}
+  ];
+
+  function svgIcon(d){
+    return '<svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'+d+'</svg>';
+  }
+
+  const tabbar = document.getElementById('tabbar');
+  const picker = document.getElementById('picker');
+
+  SCREENS.forEach((s,i)=>{
+    const tab = document.createElement('button');
+    tab.className = 'tab' + (i===0?' active':'');
+    tab.dataset.target = s.id;
+    tab.innerHTML = svgIcon(s.icon) + '<span>'+s.label+'</span>' + (s.badge?('<span class="badge">'+s.badge+'</span>'):'');
+    tabbar.appendChild(tab);
+
+    const pbtn = document.createElement('button');
+    pbtn.className = 'sp-btn' + (i===0?' active':'');
+    pbtn.dataset.target = s.id;
+    pbtn.innerHTML = svgIcon(s.icon) + '<span>'+s.label+'</span>';
+    picker.appendChild(pbtn);
+  });
+
+  function showScreen(id){
+    document.querySelectorAll('.screen-panel').forEach(p=>p.classList.toggle('active', p.dataset.panel===id));
+    document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active', t.dataset.target===id));
+    document.querySelectorAll('.sp-btn').forEach(t=>t.classList.toggle('active', t.dataset.target===id));
+    document.querySelector('.app-body').scrollTop = 0;
+  }
+
+  document.addEventListener('click', (e)=>{
+    const btn = e.target.closest('.tab, .sp-btn');
+    if(btn) showScreen(btn.dataset.target);
+
+    const stepBtn = e.target.closest('.stepper button');
+    if(stepBtn){
+      const span = stepBtn.parentElement.querySelector('span');
+      let val = parseInt(span.textContent,10);
+      const isPlus = stepBtn.innerHTML.includes('M12 5v14');
+      val = isPlus ? val+1 : Math.max(1, val-1);
+      span.textContent = val;
+    }
+  });
+</script>
+</body>
+</html>
